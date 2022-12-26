@@ -68,11 +68,14 @@ int a()
 	// Apply crate movement instructions
 	for (int i = blankLine + 1; i < input.Length; i++)
 	{
-		var v = GetIntsFromLine(input[i]);
-		int count = v[0];
-		int from = v[1] - 1;
-		int to = v[2] - 1;
-		
+		var _split = input[i].Split(' ');
+		if (_split is not ["move", var _count, "from", var _from, "to", var _to])
+			continue;
+
+		int count = int.Parse(_count);
+		int from = int.Parse(_from) - 1;
+		int to = int.Parse(_to) - 1;
+
 		for (int j = 0; j < count; j++)
 		{
 			if (stacks1[from].Count() == 0) continue;
