@@ -1,5 +1,8 @@
 <Query Kind="Program" />
 
+// Trick to this problem is that the input set contains directories containing no files. So deriving the 
+// list of directories from the list of files will lead to under counting.
+
 void Main()
 {
 Console.WriteLine($"**** p1= {a()}");
@@ -13,29 +16,22 @@ return input.Count();
 }
 
 
+HashSet<string> _dirs = new();
+
 int a()
 {
-	var input = Data.examplea();
+	var input = Data.testa();
 	var sizedFiles = CreateFileList(input); // Dictionary of files and their sizes
 	Dictionary<string, int> sizedDirs = new();
 	
 	var files = sizedFiles.Keys;
-	var dirs = files
-		.Select(f => f.Split("$").First())
-		.Distinct(); // List of unique directories
-		
-	foreach(var dir in dirs)
+	foreach(var dir in _dirs)
 	{
 		var containedFiles = sizedFiles.Where(f => f.Key.StartsWith(dir));
 		sizedDirs[dir] = containedFiles.Sum(f => f.Value);
 	}
 
-
-	sizedDirs.Dump();
-
 	var targetDirs = sizedDirs.Where(d => d.Value <= 100000);
-
-	targetDirs.Dump();
 
 	var sumTargetDirs = targetDirs.Select(d => d.Value).Sum();
 
@@ -47,9 +43,6 @@ Dictionary<string,int> CreateFileList(string[] input)
 	Dictionary<string, int> files = new();
 
 	// Calculate the list of files and sizes
-
-
-
 	var dirState = new DirectoryState();
 
 	foreach (var lineString in input)
@@ -59,7 +52,10 @@ Dictionary<string,int> CreateFileList(string[] input)
 
 		var line = lineString.Split(" ");
 		if (line is ["$", "cd", string toDir])
+		{
 			dirState.ChangeDirectory(toDir);
+			_dirs.Add(dirState.CurrentDirectory());
+		}
 		else if (line is [string sizeString, string filename])
 		{
 			int size = int.Parse(sizeString);
