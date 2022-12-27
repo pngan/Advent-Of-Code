@@ -3,10 +3,13 @@
 // Trick to this problem is that the input set contains directories containing no files. So deriving the 
 // list of directories from the list of files will lead to under counting.
 
+string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\in.txt""");
+
 void Main()
 {
-Console.WriteLine($"**** p1= {a()}");
-Console.WriteLine($"**** p2= {b()}");
+	_input.Dump();
+	Console.WriteLine($"**** p1= {a()}");
+	Console.WriteLine($"**** p2= {b()}");
 }
 
 int b()
@@ -20,8 +23,8 @@ HashSet<string> _dirs = new();
 
 int a()
 {
-	var input = Data.testa();
-	var sizedFiles = CreateFileList(input); // Dictionary of files and their sizes
+	//var input = Data.testa();
+	var sizedFiles = CreateFileList(_input); // Dictionary of files and their sizes
 	Dictionary<string, int> sizedDirs = new();
 	
 	var files = sizedFiles.Keys;
