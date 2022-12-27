@@ -15,79 +15,129 @@ return input.Count();
 
 int a()
 {
-	var input = Data.examplea();
-	var sizedFiles = CreateFileList(input); // Dictionary of files and their sizes
-	Dictionary<string, int> sizedDirs = new();
+	var input = Data.testa();
 	
-	var files = sizedFiles.Keys;
-	var dirs = files
-		.Select(f => f.Split("$").First())
-		.Distinct(); // List of unique directories
-		
+	var fileFinder = new FileFinder();
+	var dirFinder = new DirFinder();
+
+	List<string> dirs = new();
+	Dictionary<string, int> sizedFiles = new();
+	Dictionary<string, int> sizedDirs = new();
+	foreach (var line in input)
+	{
+		// Create list of directories
+		var dir = dirFinder.process(line);
+		if (dir != null)
+			dirs.Add(dir);
+
+		// Create list of sized files
+		var file = fileFinder.process(line);
+		if (file.path != null)
+			sizedFiles[file.path] = file.size;
+	}
+	
+	dirs.Dump();
+	sizedFiles.Dump();
+	
+	
+	// Initialize Sized Directoriess
 	foreach(var dir in dirs)
+		sizedDirs[dir] = 0;
+
+	// Calculate size of each directory
+	foreach (var dir in dirs)
 	{
 		var containedFiles = sizedFiles.Where(f => f.Key.StartsWith(dir));
 		sizedDirs[dir] = containedFiles.Sum(f => f.Value);
 	}
-
-
+	
 	sizedDirs.Dump();
-
+	
 	var targetDirs = sizedDirs.Where(d => d.Value <= 100000);
-
+	
 	targetDirs.Dump();
-
+	
 	var sumTargetDirs = targetDirs.Select(d => d.Value).Sum();
 
 	return sumTargetDirs;
 }
 
-Dictionary<string,int> CreateFileList(string[] input)
+
+public class DirFinder
 {
-	Dictionary<string, int> files = new();
-
-	// Calculate the list of files and sizes
-
-
-
-	var dirState = new DirectoryState();
-
-	foreach (var lineString in input)
+	public string CurrentDir { get; private set;} = "/";
+	public string process(string command)
 	{
-		if (lineString == "$ cd /" || lineString == "$ ls" || lineString.StartsWith("dir ")) // Ignore irrelevant commands 
-			continue;
-
-		var line = lineString.Split(" ");
-		if (line is ["$", "cd", string toDir])
-			dirState.ChangeDirectory(toDir);
-		else if (line is [string sizeString, string filename])
+		// Top level
+		if (command == "$ cd /")
 		{
-			int size = int.Parse(sizeString);
-			string path = $"{dirState.CurrentDirectory()}${filename}";
-			files[path] = size;
+			return "/";
 		}
+		
+		// Pop one directory level
+		if (command == "$ cd ..")
+		{
+			var index = CurrentDir.LastIndexOf("/");
+			CurrentDir = CurrentDir[index..];
+			return null;
+		}
+		
+		// Push directory
+		Regex rgDir = new(@"\$\ cd\ (.*)");
+		var matchedDir = rgDir.Match(command);
+		if (matchedDir.Length > 1)
+		{
+			var dir = matchedDir.Groups[1].Value;
+			CurrentDir += $"{dir}/";
+			return CurrentDir;
+		}
+		return null;
 	}
-	
-	return files;
 }
 
-
-internal class DirectoryState
+public class FileFinder
 {
-	private List<string> _currentDir = new();
-	
-	internal void ChangeDirectory(string toDir)
+	public string CurrentDir { get; private set; } = "/";
+	public (string path, int size) process(string command)
 	{
-		if (toDir == "..")
-			_currentDir.RemoveAt(_currentDir.Count - 1);
-		else
-			_currentDir.Add(toDir);
+		// Top directory level
+		if (command == "$ cd /")
+		{
+			return (null, 0);
+		}
+		
+		// Pop one directory level
+		if (command == "$ cd ..")
+		{
+			var index = CurrentDir.LastIndexOf("/");
+			CurrentDir = CurrentDir[index..];
+			return (null, 0);
+		}
+
+		// Push directory
+		Regex rgDir = new(@"\$\ cd\ (.*)");
+		var matchedDir = rgDir.Match(command);
+		if (matchedDir.Length > 1)
+		{
+			var dir = matchedDir.Groups[1].Value;
+			CurrentDir += $"{dir}/";
+			return (null, 0);
+		}
+
+		// Process filename
+		Regex rg = new(@"^(\d+)\s+(.*?)");
+		var matched = rg.Match(command);
+		if (matched.Length == 0)
+			return (null, 0);
+		var size = Convert.ToInt32(matched.Groups[1].Value);
+		//var size = matched.Groups[1];
+		var filename = matched.Groups[2].Value;
+
+		var path = $"{CurrentDir}{filename}";
+
+		return (path, size);
 	}
-
-	internal string CurrentDirectory() => '/'+string.Join('/', _currentDir);
 }
-
-
 
 /**** HINTS ****
 data.Select(v => Convert.ToInt32(v)) // Convert to int
@@ -106,9 +156,6 @@ first.Distinct(second)                // UNIQUE
 */
 
 
-
-
-
 int[] GetIntsFromLine(string inputString) // ! For negative numbers - Use (\-*\d+) instead
 {
 	Regex rg = new(@"(\d+)");
@@ -121,12 +168,31 @@ public static class Data
 {
 	public static string[] testb() => tb.Split("\r\n");
 	public const string tb =
-@"REPLACE_ME"
+@"$ cd /
+$ ls
+dir a
+dir aa
+$ cd a
+$ ls
+1 a.txt
+$ cd ..
+$ cd aa
+$ ls
+1 a.txt"
 	;
 
 	public static string[] exampleb() => eb.Split("\r\n");
 	public const string eb =
-@"REPLACE_ME"
+@"$ cd /
+$ ls
+dir a
+$ cd a
+$ ls
+dir a
+2 a.txt
+$ cd a
+$ ls
+99999 a.txt"
 	;
 
 	public static string[] testa() => ta.Split("\r\n");
