@@ -2,7 +2,6 @@
 
 string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\in.txt""");
 int[,] _matrix;
-int[,] _visible;
 int _nRows;
 int _nCols;
 
@@ -20,7 +19,6 @@ void Setup()
 	_nCols = _input.First().Length;
 
 	_matrix = new int[_nRows, _nCols];
-	_visible = new int[_nRows, _nCols];
 	for (int r = 0; r < _nRows; r++)
 	{
 		var row = _input[r];
@@ -93,7 +91,7 @@ public static class ArrayAccessor
 				.ToArray();
 	}
 	
-	// Get Column from but including row number
+	// Get Column from but not including row number
 	public static int[] GetColumnFrom(this int[,] matrix, int columnNumber, int fromRowNumber)
 	{
 		return Enumerable.Range(fromRowNumber+1, matrix.GetLength(0)-fromRowNumber-1)
