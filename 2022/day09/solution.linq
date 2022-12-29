@@ -66,11 +66,10 @@ public class RopeSegment
 		return tailTranslation;
 	}
 
-	// Length of Rope by City Block distance
 	private int Length()
 	{
 		var trans = Head - Tail;
-		return trans.deltaRow + trans.deltaCol;
+		return Math.Max( trans.deltaRow, trans.deltaCol);
 	}
 }
 
