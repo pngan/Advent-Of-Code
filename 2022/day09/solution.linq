@@ -2,7 +2,7 @@
   <Namespace>System.Numerics</Namespace>
 </Query>
 
-string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\ex.txt""");
+string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\in.txt""");
 HashSet<Point> tailLocations = new();
 RopeSegment rope = new();
 
@@ -12,6 +12,7 @@ void Main()
 	Part1();
 }
 
+// 6011
 void Part1()
 {
 	foreach (var rawLine in _input)
@@ -24,14 +25,14 @@ void Part1()
 		var translation = GetTranslation(strDirection);
 		for(int i = 0; i < count; i++)
 		{
-			i.Dump();
+			//i.Dump();
 			rope.Translate(translation);
-			rope.Dump();
+			//rope.Dump();
 			tailLocations.Add(rope.Tail);
-			tailLocations.Dump();
+			//tailLocations.Dump();
 		}
 	}
-	
+	tailLocations.Count().Dump();
 }
 
 void Setup()
@@ -69,7 +70,7 @@ public class RopeSegment
 	private int Length()
 	{
 		var trans = Head - Tail;
-		return Math.Max( trans.deltaRow, trans.deltaCol);
+		return Math.Max(Math.Abs(trans.deltaRow), Math.Abs(trans.deltaCol));
 	}
 }
 
