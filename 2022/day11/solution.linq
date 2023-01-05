@@ -1,86 +1,105 @@
 <Query Kind="Program" />
 
-string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\ex.txt""");
+string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\in.txt""");
 List<Monkey> _monkeys = new();
+long _reductionModulo = 1;
 
+//Part 1 = 78678
+//Part 2 = 15333249714
 void Main()
 {
 	Setup();
 	Process(ReductionPart1, 20);
+	Console.WriteLine("Part 1 = " + CalculateResult());
+
+	Setup();
+	Process(ReductionPart2, 10000);
+	Console.WriteLine("Part 2 = " + CalculateResult());
 }
 
-public int ReductionPart1(int worry) => worry/3;
-
-public void Process(Func<int,int> ReductionFunc, int numberRounds)
+long CalculateResult()
 {
-	DumpContainer dc = new DumpContainer();
-	dc.Dump();
+	var counts = _monkeys.Select(m => m.InspectionCount).Order().ToArray();
+	return (long)counts[^1]*(long)counts[^2];
+}
+
+public long ReductionPart1(long worry) => worry / 3;
+
+public long ReductionPart2(long worry)
+{
+	return worry % _reductionModulo;
+}
+
+public void Process(Func<long, long> ReductionFunc, int numberRounds)
+{
 	for( int rounds = 0; rounds < numberRounds; rounds++)
 	{
 		foreach(var monkey in _monkeys)
 		{
-			foreach (var worry in monkey.Worry)
+			while( monkey.Worry.Count > 0)
 			{
+				long worry = monkey.Worry.Dequeue();
 				monkey.InspectionCount++;
-				var newWorry = ReductionFunc(monkey.NewWorry(worry));
+				var temp = monkey.NewWorry(worry);
+				var newWorry = ReductionFunc(temp);
 				var monkeyToEnqueue = (newWorry % monkey.Factor) == 0 ? monkey.MonkeyTrue : monkey.MonkeyFalse;
 				_monkeys[monkeyToEnqueue].Worry.Enqueue(newWorry);
 			}
-			//dc.Content = rounds;
-
 		}
 	}
-	_monkeys.Dump();
 }
 
 
 public void Setup()
 {
+	_monkeys = new();
+	_reductionModulo = 1;
 	var inputMonkeys = _input.Chunk(7);
 	foreach (var inputMonkey in inputMonkeys)
 	{
 		var worries = GetIntsFromLine(inputMonkey[1]);
-		string[] operation = inputMonkey[2].Split(" ")[^2..^1];
+		var temp =  inputMonkey[2].Split(" ");
+		string[] operation = inputMonkey[2].Split(" ").TakeLast(2).ToArray();
 		int testFactor = int.Parse(inputMonkey[3].Split(" ").Last());
 		int monkeyTrue = int.Parse(inputMonkey[4].Split(" ").Last());
 		int monkeyFalse = int.Parse(inputMonkey[5].Split(" ").Last());
 
 		_monkeys.Add(new Monkey(worries, operation, testFactor, monkeyTrue, monkeyFalse));
+		
+		_reductionModulo *= testFactor;
 	}
-
-	//_monkeys.Dump();
 }
 
 public class Monkey
 {
-	public Queue<int> Worry { get; private set; }
-	public Func<int, int> NewWorry {get; private set;}
+	public Queue<long> Worry { get; private set; }
+	public Func<long, long> NewWorry {get; private set;}
 	public int Factor { get; private set; }
 	public int MonkeyTrue { get; private set; }
 	public int MonkeyFalse { get; private set; }
-	public int InspectionCount {get; set;} = 0;
-	
-	public Monkey(int[] worry, string[] operation , int testFactor, int monkeyTrue, int monkeyFalse)
+	public int InspectionCount { get; set; } = 0;
+
+	public Monkey(long[] worry, string[] operation, int testFactor, int monkeyTrue, int monkeyFalse)
 	{
-		Worry = new Queue<int>(worry);
+		Worry = new Queue<long>(worry);
 		Factor = testFactor;
 		MonkeyTrue = monkeyTrue;
 		MonkeyFalse = monkeyFalse;
 		NewWorry = operation switch
 		{
-			["+", "old"]      => (worry => worry + worry),
-			["+", string str] => (worry => worry + int.Parse(str)),
-			["*", "old"]      => (worry => worry * worry),
-			["*", string str] => (worry => worry * int.Parse(str)),
-			_                 => _ => -1
+			["+", "old"] => (worry => checked(worry + worry)),
+			["+", string str] => (worry => checked(worry + int.Parse(str))),
+			["*", "old"] => (worry => checked(worry * worry)),
+			["*", string str] => (worry => checked(worry * int.Parse(str))),
+			_ => _ => -1
 		};
 	}
 }
 
 
-int[] GetIntsFromLine(string inputString) // ! For negative numbers - Use (\-*\d+) instead
+long[] GetIntsFromLine(string inputString) // ! For negative numbers - Use (\-*\d+) instead
 {
 	Regex rg = new(@"(\d+)");
 	var matched = rg.Matches(inputString);
-	return matched.Cast<Match>().Select(m => Convert.ToInt32(m.Value)).ToArray();
+	return matched.Cast<Match>().Select(m => Convert.ToInt64(m.Value)).ToArray();
 }
