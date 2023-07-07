@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" name="LINQPadQuery.dll" fullname="C:/Users/Phillip/AppData/Local/Temp/LINQPad7/_egthsdgz/jlrcei/LINQPadQuery.dll" testcasecount="12" result="Passed" start-time="2023-02-18T08:56:48.4523781Z" end-time="2023-02-18T08:56:48.4669849Z" duration="0.014606" total="12" passed="12" failed="0" inconclusive="0" skipped="0" warnings="0" asserts="74" random-seed="971632991">
+  <command-line><![CDATA[C:\Users\Phillip\AppData\Local\LINQPad\7.6.6\ProcessServer\7.0.0-x64\LINQPad7.Query.dll *:PS "C:/Program Files/LINQPad7/LINQPad.Runtime.dll" "C:/Program Files/LINQPad7" LINQPad7.egthsdgz.bkqfnmdjct.2 egthsdgz 12936 True False False 7.0.0.0]]></command-line>
+  <filter />
+  <test-suite type="Assembly" id="1029" name="LINQPadQuery.dll" fullname="C:/Users/Phillip/AppData/Local/Temp/LINQPad7/_egthsdgz/jlrcei/LINQPadQuery.dll" runstate="Runnable" testcasecount="12" result="Passed" start-time="2023-02-18T08:56:48.4523781Z" end-time="2023-02-18T08:56:48.4669849Z" duration="0.014606" total="12" passed="12" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="74">
+    <environment framework-version="3.13.3.0" clr-version="7.0.0" os-version="Microsoft Windows 10.0.19045" platform="Win32NT" cwd="C:\Users\Phillip\AppData\Local\Temp\LINQPad7\_egthsdgz\shadow-2" machine-name="MIRO" user="Phillip" user-domain="MIRO" culture="en-NZ" uiculture="en-US" os-architecture="x64" />
+    <settings>
+      <setting name="WorkDirectory" value="E:\Users\Phillip\SynologyDrive\Linqpad\queries\Advent-Of-Code" />
+      <setting name="NumberOfTestWorkers" value="4" />
+    </settings>
+    <properties>
+      <property name="_PID" value="17860" />
+      <property name="_APPDOMAIN" value="LINQPad7.Query" />
+    </properties>
+    <test-suite type="TestFixture" id="1015" name="UserQuery" fullname="UserQuery" classname="UserQuery" runstate="Runnable" testcasecount="12" result="Passed" start-time="2023-02-18T08:56:48.4524852Z" end-time="2023-02-18T08:56:48.4669741Z" duration="0.014489" total="12" passed="12" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="74">
+      <test-case id="1027" name="Pixel_ShouldConstruct" fullname="UserQuery.Pixel_ShouldConstruct" methodname="Pixel_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="1553002450" result="Passed" start-time="2023-02-18T08:56:48.4526405Z" end-time="2023-02-18T08:56:48.4547612Z" duration="0.002121" asserts="3" />
+      <test-suite type="ParameterizedMethod" id="1025" name="Pos_ShouldConstruct" fullname="UserQuery.Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" testcasecount="9" result="Passed" start-time="2023-02-18T08:56:48.4548770Z" end-time="2023-02-18T08:56:48.4570746Z" duration="0.002198" total="9" passed="9" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="27">
+        <test-case id="1016" name="Pos_ShouldConstruct(-1,-1)" fullname="UserQuery.Pos_ShouldConstruct(-1,-1)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="491951203" result="Passed" start-time="2023-02-18T08:56:48.4549233Z" end-time="2023-02-18T08:56:48.4556860Z" duration="0.000763" asserts="3" />
+        <test-case id="1017" name="Pos_ShouldConstruct(-1,0)" fullname="UserQuery.Pos_ShouldConstruct(-1,0)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="79660569" result="Passed" start-time="2023-02-18T08:56:48.4557194Z" end-time="2023-02-18T08:56:48.4560467Z" duration="0.000327" asserts="3" />
+        <test-case id="1018" name="Pos_ShouldConstruct(-1,1)" fullname="UserQuery.Pos_ShouldConstruct(-1,1)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="1781547653" result="Passed" start-time="2023-02-18T08:56:48.4560970Z" end-time="2023-02-18T08:56:48.4561272Z" duration="0.000030" asserts="3" />
+        <test-case id="1019" name="Pos_ShouldConstruct(0,-1)" fullname="UserQuery.Pos_ShouldConstruct(0,-1)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="1727091109" result="Passed" start-time="2023-02-18T08:56:48.4561463Z" end-time="2023-02-18T08:56:48.4561620Z" duration="0.000016" asserts="3" />
+        <test-case id="1020" name="Pos_ShouldConstruct(0,0)" fullname="UserQuery.Pos_ShouldConstruct(0,0)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="273402020" result="Passed" start-time="2023-02-18T08:56:48.4561800Z" end-time="2023-02-18T08:56:48.4561932Z" duration="0.000013" asserts="3" />
+        <test-case id="1021" name="Pos_ShouldConstruct(0,1)" fullname="UserQuery.Pos_ShouldConstruct(0,1)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="813482438" result="Passed" start-time="2023-02-18T08:56:48.4562094Z" end-time="2023-02-18T08:56:48.4562201Z" duration="0.000011" asserts="3" />
+        <test-case id="1022" name="Pos_ShouldConstruct(1,-1)" fullname="UserQuery.Pos_ShouldConstruct(1,-1)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="171728713" result="Passed" start-time="2023-02-18T08:56:48.4562368Z" end-time="2023-02-18T08:56:48.4562519Z" duration="0.000015" asserts="3" />
+        <test-case id="1023" name="Pos_ShouldConstruct(1,0)" fullname="UserQuery.Pos_ShouldConstruct(1,0)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="926262670" result="Passed" start-time="2023-02-18T08:56:48.4562694Z" end-time="2023-02-18T08:56:48.4562795Z" duration="0.000010" asserts="3" />
+        <test-case id="1024" name="Pos_ShouldConstruct(1,1)" fullname="UserQuery.Pos_ShouldConstruct(1,1)" methodname="Pos_ShouldConstruct" classname="UserQuery" runstate="Runnable" seed="2006502268" result="Passed" start-time="2023-02-18T08:56:48.4562956Z" end-time="2023-02-18T08:56:48.4563071Z" duration="0.000012" asserts="3" />
+      </test-suite>
+      <test-case id="1026" name="Pos_ShouldOperate" fullname="UserQuery.Pos_ShouldOperate" methodname="Pos_ShouldOperate" classname="UserQuery" runstate="Runnable" seed="609436180" result="Passed" start-time="2023-02-18T08:56:48.4571437Z" end-time="2023-02-18T08:56:48.4587400Z" duration="0.001597" asserts="18" />
+      <test-case id="1028" name="TestImage" fullname="UserQuery.TestImage" methodname="TestImage" classname="UserQuery" runstate="Runnable" seed="757012096" result="Passed" start-time="2023-02-18T08:56:48.4587625Z" end-time="2023-02-18T08:56:48.4669385Z" duration="0.008177" asserts="26" />
+    </test-suite>
+  </test-suite>
+</test-run>

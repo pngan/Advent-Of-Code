@@ -1,9 +1,10 @@
 <Query Kind="Program" />
 
-string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\ex.txt""");
-int[,] _grid;
-(int,int) _start;
-(int,int) _end;
+#load "..\..\Utils.linq" 
+string[] _input = File.ReadAllLines($"""{Path.GetDirectoryName(Util.CurrentQueryPath)}\in.txt""");
+Image2d _grid;
+Pixel _start;
+Pixel _end;
 
 void Main()
 {
@@ -16,88 +17,69 @@ void Setup()
 	var rows = _input.Length;
 	var cols = _input[0].Length;
 	
-	_grid = new int[rows,cols];
-	
-	for( int r = 0; r < rows; r++)
-		for( int c = 0; c < cols; c++)
+	int[,] grid = new int[rows,cols];
+
+	for (int r = 0; r < rows; r++)
+	{
+		for (int c = 0; c < cols; c++)
 		{
 			var inputChar = _input[r][c];
 			if (inputChar == 'S')  // Note starting position
 			{
 				inputChar = 'a';
-				_start = (r,c);
+				_start = new Pixel(0, r, c);
 			}
 			else if (inputChar == 'E') // Note end position
 			{
 				inputChar = 'z';
-				_end = (r, c);
+				_end = new Pixel('z'-'a', r, c);
 			}
 
-			_grid[r,c] = inputChar - 'a';
+			grid[r, c] = inputChar - 'a';
 		}
+	}
+	_grid = new Image2d(rows, cols, grid);
 }
 
 void Solve()
 {
-	var queue = new Queue<(int,int)>();
-	var explored = new List<(int, int)>();
+	var queue = new Queue<(Pixel pixel, int steps)>();
+	var visited = new List<Pixel>();
 
 	var prev = new Dictionary<(int, int), (int, int)>();
 
 	// Initialize queue with the start position
 	prev.Clear();
-	queue.Enqueue(_start);
-	explored.Add(_start);
-
-	int steps = 0;
+	queue.Enqueue((_start, 0));
+	visited.Add(_start);
 
 	while (queue.Count() != 0)
 	{
-		//queue.Dump();
-		steps++;
 		var current = queue.Dequeue();
-		
-		Console.WriteLine($"Current = ({current.Item1}, {current.Item2})");
 
-		if (current == _end) // Exit when end is found
+		Console.Write($"Current = ({current.pixel} {current.steps})");
+
+		if (current.pixel == _end) // Exit when end is found
 		{
-			Console.WriteLine("*** found!");
+			Console.WriteLine("\n*** found!");
 			break;
 		}
 		
-		var allNeighbours = GetNeighbours(current);
-		var neighbours = allNeighbours.Except(explored);
+		var cardinalNeighbours = _grid.CardinalNeighbours(current.pixel);
+		var currentValue = current.pixel.Value;
+		// Candidate next pixel must be in cardinal directions, not previously visited, and a value the same or one more
+		// than the current pixel.
+		var neighbours = cardinalNeighbours
+			.Except(visited).Where(n => n.Value == currentValue || n.Value == currentValue+1)
+			.OrderBy(n=>n.Value);
+		if (!neighbours.Any()) Console.Write(" x");
 		foreach (var neighbour in neighbours)
 		{
-			explored.Add(neighbour);
-			queue.Enqueue(neighbour);
-			prev[neighbour] = current;
+			visited.Add(neighbour);
+			queue.Enqueue((neighbour, current.steps+1));
 		}
+		Console.WriteLine();
 	}
-	steps.Dump();
-	//prev.Dump();
 
 
 }
-
-List<(int, int)> GetNeighbours((int, int) currentPos)
-{
-	var neighbours = new List<(int,int)>();
-	var currentVal = _grid[currentPos.Item1, currentPos.Item2];
-	
-	for(int dr = -1; dr < 2; dr++)
-	 	for(int dc = -1; dc < 2; dc++)
-		{
-			if (dr ==0 && dc == 0) continue;
-			int nr = currentPos.Item1 + dr;
-			int nc = currentPos.Item2 + dc;
-			if (nr < 0 || nr >= _grid.GetLength(0) || nc < 0 || nc >= _grid.GetLength(1))
-				continue;
-			int neighbourVal = _grid[nr,nc];
-			if (neighbourVal == currentVal || neighbourVal == (currentVal+1))
-				neighbours.Add((nr, nc));
-		}
-	
-	return neighbours;
-}
-
